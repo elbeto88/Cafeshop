@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cafetal — Café de especialidad, frío y caliente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap">
+<style>
+:root {
+  --bg: #EAE4D9;
+  --cream: #F3F0EB;
+  --charcoal: #1C1C1C;
+  --earth: #2A2A2A;
+  --accent: #8C7B6B;
+  --ease-quiet: cubic-bezier(.22, 1, .36, 1);
+  --ease-precise: cubic-bezier(.4, 0, .2, 1);
+  --ease-emphasis: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--charcoal);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+/* Cursor personalizado */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--charcoal);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease-quiet), height 0.3s var(--ease-quiet), background 0.3s var(--ease-quiet);
+  mix-blend-mode: difference;
+}
+.cursor.is-hover { width: 44px; height: 44px; background: var(--cream); }
+@media (pointer: coarse) { .cursor { display: none; } body { cursor: auto; } }
+
+/* Tipografía */
+.eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow--rule::after {
+  content: '';
+  display: inline-block;
+  width: 0; height: 1px;
+  margin-left: 1rem;
+  vertical-align: middle;
+  background: currentColor;
+  transition: width 800ms var(--ease-quiet) 400ms;
+}
+.is-in .eyebrow--rule::after { width: 2.5rem; }
+
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--earth);
+}
+h1 { font-size: clamp(3.5rem, 10vw, 9rem); font-weight: 500; }
+h2 { font-size: clamp(2.5rem, 6vw, 5rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+
+p { font-size: 1rem; line-height: 1.7; color: var(--earth); opacity: 0.85; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+section { padding: 8rem 0; position: relative; }
+
+@media (max-width: 768px) {
+  section { padding: 5rem 0; }
+  .container { padding: 0 1.5rem; }
+}
+
+/* Navegación */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(234, 228, 217, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(28, 28, 28, 0.06);
+  transition: padding 0.4s var(--ease-quiet);
+}
+.nav.scrolled { padding: 1rem 2rem; }
+
+.nav__brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  font-style: italic;
+  display: flex; align-items: center; gap: 0.65rem;
+}
+.nav__brand::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav__links { display: flex; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--earth);
+  position: relative;
+  padding: 0.5rem 0;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--charcoal);
+  transition: width 0.4s var(--ease-quiet);
+}
+.nav__links a:hover::after { width: 100%; }
+
+.nav__cart {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--charcoal);
+  border-radius: 100px;
+  transition: background 0.3s, color 0.3s;
+}
+.nav__cart:hover { background: var(--charcoal); color: var(--cream); }
+.nav__cart-count {
+  background: var(--accent);
+  color: var(--cream);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+@media (max-width: 900px) { .nav__links { display: none; } }
+@media (max-width: 768px) { .nav { padding: 1rem 1.5rem; } .nav__brand { font-size: 1.3rem; } }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10rem 2rem 6rem;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 900px;
+}
+
+.hero__eyebrow { margin-bottom: 2rem; }
+
+.hero h1 {
+  font-size: clamp(4rem, 14vw, 11rem);
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 span {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.hero__subtitle {
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto 3rem;
+  color: var(--earth);
+  opacity: 0.7;
+  line-height: 1.7;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  transition: transform 0.4s var(--ease-quiet), background 0.4s var(--ease-quiet);
+}
+.hero__cta:hover { background: var(--accent); transform: translateY(-2px); }
+.hero__cta-arrow { transition: transform 0.4s var(--ease-quiet); }
+.hero__cta:hover .hero__cta-arrow { transform: translateX(4px); }
+
+/* Hojas dispersas */
+.leaf {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 1200ms cubic-bezier(.34,1.56,.64,1), opacity 1200ms var(--ease-quiet);
+  z-index: 2;
+  will-change: transform;
+}
+.leaf.in { opacity: 1; }
+.leaf img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  filter: drop-shadow(0 25px 50px rgba(28, 28, 28, 0.18)) saturate(0.85) sepia(0.15);
+}
+.leaf.sway img {
+  animation: leaf-sway 6s ease-in-out infinite;
+  transform-origin: 50% 0%;
+}
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.leaf--1 { width: 180px; height: 240px; top: 14%; left: 7%; }
+.leaf--2 { width: 220px; height: 280px; top: 16%; right: 5%; }
+.leaf--3 { width: 140px; height: 180px; bottom: 16%; left: 11%; }
+.leaf--4 { width: 170px; height: 210px; bottom: 20%; right: 9%; }
+.leaf--5 { width: 110px; height: 140px; top: 48%; left: 3%; }
+
+@media (max-width: 1100px) {
+  .leaf--1, .leaf--2 { transform: scale(0.75); }
+  .leaf--3, .leaf--4 { transform: scale(0.7); }
+  .leaf--5 { display: none; }
+}
+@media (max-width: 768px) {
+  .leaf--3, .leaf--4 { display: none; }
+  .leaf--1 { transform: scale(0.5); top: 8%; left: -3%; }
+  .leaf--2 { transform: scale(0.5); top: 8%; right: -3%; }
+}
+
+/* Sello orbital */
+.orbital {
+  position: absolute;
+  width: 180px; height: 180px;
+  z-index: 4;
+}
+.orbital--hero { bottom: 4rem; right: 4rem; }
+.orbital svg {
+  width: 100%; height: 100%;
+  animation: rotate-slow 30s linear infinite;
+}
+.orbital__center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--accent);
+}
+@keyframes rotate-slow {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+@media (max-width: 900px) { .orbital--hero { display: none; } }
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--earth);
+  opacity: 0.6;
+  z-index: 4;
+}
+.scroll-indicator__line {
+  width: 1px; height: 40px;
+  background: var(--earth);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-indicator__line::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  width: 100%; height: 40px;
+  background: var(--accent);
+  animation: scroll-line 2.5s var(--ease-quiet) infinite;
+}
+@keyframes scroll-line {
+  0% { top: -40px; }
+  100% { top: 40px; }
+}
+
+/* Marquee separador */
+.marquee {
+  overflow: hidden;
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(28, 28, 28, 0.08);
+  border-bottom: 1px solid rgba(28, 28, 28, 0.08);
+  background: var(--bg);
+  position: relative;
+  z-index: 5;
+}
+.marquee__track {
+  display: flex;
+  gap: 4rem;
+  white-space: nowrap;
+  animation: marquee 50s linear infinite;
+  width: max-content;
+}
+.marquee__item {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-style: italic;
+  color: var(--earth);
+  display: inline-flex;
+  align-items: center;
+  gap: 4rem;
+  font-weight: 400;
+}
+.marquee__item::after {
+  content: '✦';
+  color: var(--accent);
+  font-size: 1rem;
+  font-style: normal;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Section header */
+.section-header {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
+  align-items: end;
+  margin-bottom: 5rem;
+}
+.section-header__left .eyebrow { margin-bottom: 1.75rem; }
+.section-header__left h2 {
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.section-header__left h2 .alt {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 400;
+}
+.section-header__right { padding-bottom: 1.25rem; }
+.section-header__right p { max-width: 420px; }
+
+.section-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.section-num::before {
+  content: '';
+  width: 2rem; height: 1px;
+  background: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .section-header { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* CARRUSEL */
+.carousel { position: relative; }
+.carousel__viewport {
+  overflow: hidden;
+  padding: 1rem 0 2rem;
+  cursor: grab;
+  user-select: none;
+}
+.carousel__viewport:active { cursor: grabbing; }
+.carousel__track {
+  display: flex;
+  gap: 1.5rem;
+  transition: transform 0.85s var(--ease-emphasis);
+  will-change: transform;
+}
+.carousel__slide {
+  flex: 0 0 calc((100% - 3rem) / 3);
+  min-width: 0;
+  transition: opacity 0.6s var(--ease-quiet), transform 0.6s var(--ease-quiet);
+  opacity: 0.35;
+  transform: scale(0.96);
+}
+.carousel__slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (max-width: 1100px) {
+  .carousel__slide { flex: 0 0 calc((100% - 1.5rem) / 2); }
+}
+@media (max-width: 700px) {
+  .carousel__slide { flex: 0 0 100%; }
+}
+
+.carousel__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(28, 28, 28, 0.1);
+}
+.carousel__btn-group { display: flex; gap: 0.75rem; }
+.carousel__btn {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--charcoal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--charcoal);
+  transition: background 0.4s var(--ease-quiet), color 0.4s var(--ease-quiet), transform 0.4s var(--ease-quiet);
+}
+.carousel__btn:hover:not(:disabled) {
+  background: var(--charcoal);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+.carousel__btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.carousel__dots { display: flex; gap: 0.6rem; align-items: center; }
+.carousel__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(28, 28, 28, 0.2);
+  transition: background 0.3s var(--ease-quiet), width 0.3s var(--ease-quiet);
+  padding: 0;
+}
+.carousel__dot.is-active {
+  background: var(--charcoal);
+  width: 28px;
+  border-radius: 4px;
+}
+.carousel__counter {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--accent);
+  margin-left: 1rem;
+}
+
+/* Tarjeta de producto */
+.card {
+  background: var(--cream);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.6s var(--ease-quiet), box-shadow 0.6s var(--ease-quiet);
+}
+.carousel__slide.is-active .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -20px rgba(28, 28, 28, 0.18);
+}
+
+.card__image {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  position: relative;
+}
+.card__image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease-quiet);
+}
+.card:hover .card__image img { transform: scale(1.05); }
+.card__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.25), transparent 45%);
+  pointer-events: none;
+}
+
+.card__number {
+  position: absolute;
+  top: 1.25rem; left: 1.25rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--cream);
+  z-index: 2;
+  letter-spacing: 0.05em;
+}
+.card__tag {
+  position: absolute;
+  top: 1.25rem; right: 1.25rem;
+  background: var(--cream);
+  color: var(--charcoal);
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.card__body {
+  padding: 1.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.card__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--earth);
+  letter-spacing: -0.01em;
+}
+.card__origin {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.card__desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--earth);
+  opacity: 0.75;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+.card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(28, 28, 28, 0.1);
+}
+.card__price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+.card__price-unit {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+.card__btn {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--charcoal);
+  color: var(--cream);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: background 0.3s var(--ease-quiet), transform 0.4s var(--ease-quiet);
+  font-weight: 300;
+}
+.card__btn:hover {
+  background: var(--accent);
+  transform: rotate(90deg);
+}
+
+/* Variantes de sección */
+.frios { background: var(--bg); position: relative; }
+.frios::before {
+  content: 'fríos';
+  position: absolute;
+  top: 5rem; right: -2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(10rem, 22vw, 22rem);
+  font-style: italic;
+  color: rgba(140, 123, 107, 0.06);
+  font-weight: 400;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 0;
+}
+
+.calientes { background: var(--cream); position: relative; }
+.calientes::before {
+  content: 'calientes';
+  position: absolute;
+  top: 5rem; left: -2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(10rem, 22vw, 22rem);
+  font-style: italic;
+  color: rgba(140, 123, 107, 0.06);
+  font-weight: 400;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 0;
+}
+
+.sucursales { background: var(--bg); }
+.sucursales .card__image { aspect-ratio: 3/2; }
+.sucursales .card__body { padding: 2rem; }
+
+.location-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(28, 28, 28, 0.08);
+  font-size: 0.85rem;
+  align-items: center;
+}
+.location-detail:last-of-type { border-bottom: none; padding-bottom: 0; }
+.location-detail__label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.location-detail__value {
+  color: var(--earth);
+  font-weight: 400;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* Compras (sección oscura) */
+.compras {
+  background: var(--earth);
+  color: var(--cream);
+  position: relative;
+}
+.compras h2, .compras h3 { color: var(--cream); }
+.compras h2 .alt { color: var(--accent); }
+.compras .eyebrow { color: var(--accent); }
+.compras p { color: var(--cream); opacity: 0.65; }
+.compras .section-num { color: var(--accent); }
+.compras .section-num::before { background: var(--accent); }
+
+.compras .card {
+  background: rgba(243, 240, 235, 0.04);
+  border: 1px solid rgba(243, 240, 235, 0.1);
+}
+.compras .card__title { color: var(--cream); }
+.compras .card__origin { color: var(--accent); }
+.compras .card__desc { color: var(--cream); opacity: 0.6; }
+.compras .card__price { color: var(--cream); }
+.compras .card__meta { border-top-color: rgba(243, 240, 235, 0.12); }
+.compras .card__tag { background: var(--accent); color: var(--cream); }
+.compras .card__btn { background: var(--cream); color: var(--charcoal); }
+.compras .card__btn:hover { background: var(--accent); color: var(--cream); }
+.compras .card__image::after {
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.5), transparent 50%);
+}
+
+.compras .carousel__dot { background: rgba(243, 240, 235, 0.2); }
+.compras .carousel__dot.is-active { background: var(--cream); }
+.compras .carousel__btn {
+  border-color: var(--cream);
+  color: var(--cream);
+}
+.compras .carousel__btn:hover:not(:disabled) {
+  background: var(--cream);
+  color: var(--charcoal);
+}
+.compras .carousel__controls { border-top-color: rgba(243, 240, 235, 0.12); }
+
+.compras__cta {
+  margin-top: 4rem;
+  text-align: center;
+  padding: 3rem 0;
+  border-top: 1px solid rgba(243, 240, 235, 0.1);
+}
+.compras__cta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.compras__total {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+.compras__total-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.compras__total-value {
+  font-size: 3rem;
+  color: var(--cream);
+  font-weight: 500;
+}
+.compras__checkout {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 2.5rem;
+  background: var(--cream);
+  color: var(--charcoal);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  transition: background 0.3s, transform 0.3s;
+  font-weight: 500;
+}
+.compras__checkout:hover {
+  background: var(--accent);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+/* Footer */
+.footer {
+  background: var(--charcoal);
+  color: var(--cream);
+  padding: 5rem 0 2rem;
+}
+.footer__top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+.footer__brand h3 {
+  color: var(--cream);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.footer__brand p {
+  color: var(--cream);
+  opacity: 0.55;
+  font-size: 0.9rem;
+  max-width: 320px;
+  line-height: 1.7;
+}
+.footer__brand .eyebrow { color: var(--accent); margin-top: 1.5rem; display: block; }
+
+.footer__col h4 {
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0.45;
+  font-weight: 500;
+}
+.footer__col ul { list-style: none; }
+.footer__col li { margin-bottom: 0.85rem; }
+.footer__col a {
+  color: var(--cream);
+  opacity: 0.7;
+  font-size: 0.92rem;
+  transition: opacity 0.3s var(--ease-quiet);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+.footer__col a:hover { opacity: 1; color: var(--accent); }
+
+.footer__bottom {
+  padding-top: 2rem;
+  border-top: 1px solid rgba(243, 240, 235, 0.1);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  opacity: 0.45;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .footer__top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer__brand { grid-column: 1 / -1; }
+  .footer__bottom { flex-direction: column; gap: 1rem; }
+}
+
+/* Reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s var(--ease-emphasis), transform 1s var(--ease-emphasis);
+}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* Ken Burns ambient en imágenes de sucursales */
+.ken-burns img {
+  animation: kenburns 20s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0%   { transform: scale(1) translate(-1%, -1%); }
+  100% { transform: scale(1.08) translate(1%, 1%); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .leaf { opacity: 1 !important; transform: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor personalizado -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Navegación -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav__brand">Cafetal</a>
+  <ul class="nav__links">
+    <li><a href="#frios">Fríos</a></li>
+    <li><a href="#calientes">Calientes</a></li>
+    <li><a href="#sucursales">Sucursales</a></li>
+    <li><a href="#compras">Compras</a></li>
+  </ul>
+  <a href="#compras" class="nav__cart" data-cursor="hover">
+    Bolsa <span class="nav__cart-count" id="cartCount">0</span>
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Hojas dispersas -->
+  <div class="leaf leaf--1 sway" data-base-rot="-8">
+    <img src="https://picsum.photos/seed/coffee-beans-roasted/360/480" alt="">
+  </div>
+  <div class="leaf leaf--2 sway" data-base-rot="6">
+    <img src="https://picsum.photos/seed/coffee-pour-ritual/440/560" alt="">
+  </div>
+  <div class="leaf leaf--3 sway" data-base-rot="4">
+    <img src="https://picsum.photos/seed/cold-brew-glass/280/360" alt="">
+  </div>
+  <div class="leaf leaf--4 sway" data-base-rot="-5">
+    <img src="https://picsum.photos/seed/espresso-shot-cream/340/420" alt="">
+  </div>
+  <div class="leaf leaf--5 sway" data-base-rot="10">
+    <img src="https://picsum.photos/seed/coffee-leaf-botanical/220/280" alt="">
+  </div>
+
+  <div class="hero__content">
+    <div class="hero__eyebrow reveal">
+      <span class="eyebrow eyebrow--rule">Café de especialidad · Tostado artesanal</span>
+    </div>
+    <h1 class="reveal reveal-delay-1">
+      Cafetal<br><span>& co.</span>
+    </h1>
+    <p class="hero__subtitle reveal reveal-delay-2">
+      Una casa de café dedicada al ritual lento: granos seleccionados, tueste diario
+      y preparaciones que se sirven a la temperatura justa — fría o humeante, nunca tibia.
+    </p>
+    <a href="#frios" class="hero__cta reveal reveal-delay-3" data-cursor="hover">
+      Explorar la carta
+      <span class="hero__cta-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Sello orbital -->
+  <div class="orbital orbital--hero">
+    <svg viewBox="0 0 200 200">
+      <defs>
+        <path id="circlePath" d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"/>
+      </defs>
+      <text font-family="Inter" font-size="11" font-weight="500" letter-spacing="3" fill="#2A2A2A">
+        <textPath href="#circlePath" startOffset="0">
+          CAFETAL & CO. · DESDE 2014 · TOSTADO DIARIO · CAFETAL & CO. · DESDE 2014 ·
+        </textPath>
+      </text>
+    </svg>
+    <div class="orbital__center">c</div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-indicator__line"></div>
+  </div>
+</section>
+
+<!-- Marquee separador -->
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__item">Cold Brew</span>
+    <span class="marquee__item">Espresso</span>
+    <span class="marquee__item">Nitro</span>
+    <span class="marquee__item">Flat White</span>
+    <span class="marquee__item">Pour Over</span>
+    <span class="marquee__item">Affogato</span>
+    <span class="marquee__item">Latte</span>
+    <span class="marquee__item">Frappé</span>
+    <span class="marquee__item">Cold Brew</span>
+    <span class="marquee__item">Espresso</span>
+    <span class="marquee__item">Nitro</span>
+    <span class="marquee__item">Flat White</span>
+    <span class="marquee__item">Pour Over</span>
+    <span class="marquee__item">Affogato</span>
+    <span class="marquee__item">Latte</span>
+    <span class="marquee__item">Frappé</span>
+  </div>
+</div>
+
+<!-- SECCIÓN FRÍOS -->
+<section class="frios" id="frios">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__left">
+        <div class="section-num">01 — Carta fría</div>
+        <span class="eyebrow eyebrow--rule">Frescos · 16 horas de elaboración</span>
+        <h2 style="margin-top: 1.5rem;">Bebidas <span class="alt">frías</span></h2>
+      </div>
+      <div class="section-header__right">
+        <p>
+          Extracciones largas en agua fría, hielo filtrado y leches cremadas a baja temperatura.
+          Cada vaso se construye lentamente — el frío no perdona errores de tueste.
+        </p>
+      </div>
+    </div>
+
+    <div class="carousel reveal" data-carousel data-cursor="hover">
+      <div class="carousel__viewport">
+        <div class="carousel__track">
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">01</span>
+                <span class="card__tag">Firmé</span>
+                <img src="https://picsum.photos/seed/cold-brew-classic/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Cold Brew Clásico</h3>
+                <div class="card__origin">Chiapas · 18h · medio</div>
+                <p class="card__desc">Granos de altura macerados 18 horas en agua fría. Cuerpo sedoso, notas de chocolate negro y nuez.</p>
+                <div class="card__meta">
+                  <div class="card__price">$72<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Cold Brew Clásico" data-price="72">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">02</span>
+                <span class="card__tag">Nitro</span>
+                <img src="https://picsum.photos/seed/nitro-cold-brew-cream/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Nitro Cold Brew</h3>
+                <div class="card__origin">Veracruz · 18h · nitrógeno</div>
+                <p class="card__desc">Cold Brew infundido con nitrógeno. Corona cremosa sin leche, textura de stout sobre el paladar.</p>
+                <div class="card__meta">
+                  <div class="card__price">$88<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Nitro Cold Brew" data-price="88">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">03</span>
+                <img src="https://picsum.photos/seed/iced-latte-glass/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Iced Latte</h3>
+                <div class="card__origin">Doble espresso · leche entera</div>
+                <p class="card__desc">Doble espresso vertido sobre hielo y leche fría. Dulzor natural del grano, sin jarabes añadidos.</p>
+                <div class="card__meta">
+                  <div class="card__price">$68<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Iced Latte" data-price="68">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">04</span>
+                <span class="card__tag">Estación</span>
+                <img src="https://picsum.photos/seed/caramel-frappe-cream/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Frappé Caramelo</h3>
+                <div class="card__origin">Caramelo de sal de mar · crema</div>
+                <p class="card__desc">Espresso, hielo y caramelo artesanal batidos. Corona de crema quemada con soplete.</p>
+                <div class="card__meta">
+                  <div class="card__price">$92<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Frappé Caramelo" data-price="92">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">05</span>
+                <img src="https://picsum.photos/seed/affogato-vanilla-gelato/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Affogato</h3>
+                <div class="card__origin">Gelato de vainilla · espresso caliente</div>
+                <p class="card__desc">Una bola de gelato artesanal ahogada en espresso recién extraído. El postre-café que se sirve con cuchara.</p>
+                <div class="card__meta">
+                  <div class="card__price">$98<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Affogato" data-price="98">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">06</span>
+                <img src="https://picsum.photos/seed/iced-mocha-cocoa/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Iced Mocha</h3>
+                <div class="card__origin">Cacao tabasqueño · leche</div>
+                <p class="card__desc">Espresso, cacao mexicano y leche fría batida con hielo. Amargor profundo, final de cacao tostado.</p>
+                <div class="card__meta">
+                  <div class="card__price">$78<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Iced Mocha" data-price="78">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </div>
+      <div class="carousel__controls">
+        <div class="carousel__dots"></div>
+        <div class="carousel__btn-group">
+          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">←</button>
+          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN CALIENTES -->
+<section class="calientes" id="calientes">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__left">
+        <div class="section-num">02 — Carta caliente</div>
+        <span class="eyebrow eyebrow--rule">Extracción espresso · 92°C</span>
+        <h2 style="margin-top: 1.5rem;">Bebidas <span class="alt">calientes</span></h2>
+      </div>
+      <div class="section-header__right">
+        <p>
+          Máquina de palanca italiana, agua filtrada a 92°C exactos y leche texturizada
+          a 65°C para preservar la dulzura natural. Cada taza sale en menos de cuatro minutos.
+        </p>
+      </div>
+    </div>
+
+    <div class="carousel reveal" data-carousel data-cursor="hover">
+      <div class="carousel__viewport">
+        <div class="carousel__track">
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">01</span>
+                <span class="card__tag">Esencia</span>
+                <img src="https://picsum.photos/seed/espresso-crema-shot/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Espresso</h3>
+                <div class="card__origin">25ml · crema avellana</div>
+                <p class="card__desc">Un solo grano, una sola extracción. 25 mililitros puros donde se concentran treinta segundos de trabajo.</p>
+                <div class="card__meta">
+                  <div class="card__price">$38<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Espresso" data-price="38">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">02</span>
+                <img src="https://picsum.photos/seed/cappuccino-foam-art/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Cappuccino</h3>
+                <div class="card__origin">1:1:1 · espuma densa</div>
+                <p class="card__desc">Un tercio espresso, un tercio leche, un tercio espuma. Equilibrio italiano servido en taza de porcelana precalentada.</p>
+                <div class="card__meta">
+                  <div class="card__price">$58<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Cappuccino" data-price="58">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">03</span>
+                <img src="https://picsum.photos/seed/flat-white-microfoam/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Flat White</h3>
+                <div class="card__origin">Doble ristretto · microespuma</div>
+                <p class="card__desc">Origen australiano. Doble ristretto cubierto de microespuma sedosa — la textura más difícil de lograr, la más recompensadora.</p>
+                <div class="card__meta">
+                  <div class="card__price">$68<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Flat White" data-price="68">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">04</span>
+                <img src="https://picsum.photos/seed/latte-art-tulip/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Latte</h3>
+                <div class="card__origin">Leche sedosa · arte tulip</div>
+                <p class="card__desc">Espresso suave cubierto por leche al vapor. Una obra de arte efímera dibujada a mano sobre cada taza.</p>
+                <div class="card__meta">
+                  <div class="card__price">$62<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Latte" data-price="62">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">05</span>
+                <img src="https://picsum.photos/seed/mocha-dark-chocolate/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Mocha</h3>
+                <div class="card__origin">Chocolate amargo 70% · olla</div>
+                <p class="card__desc">Espresso, chocolate negro fundido al baño maría y leche al vapor. El café que se bebía en las haciendas cacaoteras.</p>
+                <div class="card__meta">
+                  <div class="card__price">$75<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Mocha" data-price="75">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">06</span>
+                <img src="https://picsum.photos/seed/cortado-glass-small/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Cortado</h3>
+                <div class="card__origin">50/50 · vaso pequeño</div>
+                <p class="card__desc">Espresso "cortado" con una cantidad igual de leche caliente. La proporción española para conversaciones cortas.</p>
+                <div class="card__meta">
+                  <div class="card__price">$48<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Cortado" data-price="48">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">07</span>
+                <img src="https://picsum.photos/seed/macchiato-stained-foam/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Macchiato</h3>
+                <div class="card__origin">Espresso · mancha de espuma</div>
+                <p class="card__desc">Espresso "manchado" con una cucharada de espuma. Para quien quiere el café casi puro, con un guiño de leche.</p>
+                <div class="card__meta">
+                  <div class="card__price">$42<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Macchiato" data-price="42">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">08</span>
+                <img src="https://picsum.photos/seed/americano-long-black/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Americano</h3>
+                <div class="card__origin">Doble espresso · agua caliente</div>
+                <p class="card__desc">Doble espresso diluido con agua caliente a 85°C. Cuerpo largo, amargor amable, la taza para toda la mañana.</p>
+                <div class="card__meta">
+                  <div class="card__price">$52<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Americano" data-price="52">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </div>
+      <div class="carousel__controls">
+        <div class="carousel__dots"></div>
+        <div class="carousel__btn-group">
+          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">←</button>
+          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN SUCURSALES -->
+<section class="sucursales" id="sucursales">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__left">
+        <div class="section-num">03 — Dónde encontrarnos</div>
+        <span class="eyebrow eyebrow--rule">Cinco casas · una misma obsesión</span>
+        <h2 style="margin-top: 1.5rem;">Nuestras <span class="alt">sucursales</span></h2>
+      </div>
+      <div class="section-header__right">
+        <p>
+          Cada cafetería está diseñada como una pausa. Madera tratada a mano, luz cálida
+          amortiguada y barras de tueste abierto para que veas el grano transformarse.
+        </p>
+      </div>
+    </div>
+
+    <div class="carousel reveal" data-carousel data-cursor="hover">
+      <div class="carousel__viewport">
+        <div class="carousel__track">
+
+          <div class="carousel__slide">
+            <article class="card card--location">
+              <div class="card__image ken-burns">
+                <span class="card__number">01</span>
+                <span class="card__tag">Casa matriz</span>
+                <img src="https://picsum.photos/seed/cafe-roma-norte-interior/640/440" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Roma Norte</h3>
+                <div class="card__origin">Ciudad de México</div>
+                <div style="margin-top: 1rem;">
+                  <div class="location-detail">
+                    <span class="location-detail__label">Dirección</span>
+                    <span class="location-detail__value">Orizaba 87</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Horario</span>
+                    <span class="location-detail__value">07:00 — 22:00</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Tueste</span>
+                    <span class="location-detail__value">En sitio</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card card--location">
+              <div class="card__image ken-burns">
+                <span class="card__number">02</span>
+                <img src="https://picsum.photos/seed/cafe-condesa-arbol/640/440" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Condesa</h3>
+                <div class="card__origin">Ciudad de México</div>
+                <div style="margin-top: 1rem;">
+                  <div class="location-detail">
+                    <span class="location-detail__label">Dirección</span>
+                    <span class="location-detail__value">Pachuca 76</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Horario</span>
+                    <span class="location-detail__value">08:00 — 21:00</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Patio</span>
+                    <span class="location-detail__value">Jardín abierto</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card card--location">
+              <div class="card__image ken-burns">
+                <span class="card__number">03</span>
+                <img src="https://picsum.photos/seed/cafe-polanco-marmol/640/440" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Polanco</h3>
+                <div class="card__origin">Ciudad de México</div>
+                <div style="margin-top: 1rem;">
+                  <div class="location-detail">
+                    <span class="location-detail__label">Dirección</span>
+                    <span class="location-detail__value">Av. Masaryk 134</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Horario</span>
+                    <span class="location-detail__value">07:30 — 23:00</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Barra</span>
+                    <span class="location-detail__value">14 lugares</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card card--location">
+              <div class="card__image ken-burns">
+                <span class="card__number">04</span>
+                <img src="https://picsum.photos/seed/cafe-monterrey-piedra/640/440" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">San Pedro</h3>
+                <div class="card__origin">Monterrey</div>
+                <div style="margin-top: 1rem;">
+                  <div class="location-detail">
+                    <span class="location-detail__label">Dirección</span>
+                    <span class="location-detail__value">Calzada del Valle 340</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Horario</span>
+                    <span class="location-detail__value">07:00 — 21:00</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Tueste</span>
+                    <span class="location-detail__value">Miércoles</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card card--location">
+              <div class="card__image ken-burns">
+                <span class="card__number">05</span>
+                <img src="https://picsum.photos/seed/cafe-guadalajara-ladrillo/640/440" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Centro</h3>
+                <div class="card__origin">Guadalajara</div>
+                <div style="margin-top: 1rem;">
+                  <div class="location-detail">
+                    <span class="location-detail__label">Dirección</span>
+                    <span class="location-detail__value">Morelos 412</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Horario</span>
+                    <span class="location-detail__value">08:00 — 20:00</span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="location-detail__label">Taller</span>
+                    <span class="location-detail__value">Catas sábados</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </div>
+      <div class="carousel__controls">
+        <div class="carousel__dots"></div>
+        <div class="carousel__btn-group">
+          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">←</button>
+          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN COMPRAS -->
+<section class="compras" id="compras">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__left">
+        <div class="section-num">04 — Tienda</div>
+        <span class="eyebrow eyebrow--rule">Para llevar la casa contigo</span>
+        <h2 style="margin-top: 1.5rem;">Compra <span class="alt">en línea</span></h2>
+      </div>
+      <div class="section-header__right">
+        <p>
+          Granos recién tostados enviados en less than 24 hours, mercancía de barista
+          y suscripciones para que el café llegue solo. Envíos gratis a partir de $600.
+        </p>
+      </div>
+    </div>
+
+    <div class="carousel reveal" data-carousel data-cursor="hover">
+      <div class="carousel__viewport">
+        <div class="carousel__track">
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">01</span>
+                <span class="card__tag">250g</span>
+                <img src="https://picsum.photos/seed/coffee-bag-beans-light/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Tueste Claro</h3>
+                <div class="card__origin">Chiapas · floral · cítrico</div>
+                <p class="card__desc">Grano de altura tostado 9 minutos. Notas de jazmín, miel y naranja. Ideal para pour over y methods manuales.</p>
+                <div class="card__meta">
+                  <div class="card__price">$285<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Tueste Claro 250g" data-price="285">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">02</span>
+                <span class="card__tag">250g</span>
+                <img src="https://picsum.photos/seed/coffee-bag-medium-roast/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Tueste Medio</h3>
+                <div class="card__origin">Veracruz · cacao · nuez</div>
+                <p class="card__desc">Tueste equilibrado de 12 minutos. Cuerpo medio, acidez suave y final de chocolate amargo. Espresso y americano.</p>
+                <div class="card__meta">
+                  <div class="card__price">$265<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Tueste Medio 250g" data-price="265">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">03</span>
+                <span class="card__tag">250g</span>
+                <img src="https://picsum.photos/seed/coffee-bag-dark-espresso/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Tueste Oscuro</h3>
+                <div class="card__origin">Oaxaca · intenso · humo</div>
+                <p class="card__desc">14 minutos en tambor. Cuerpo pesado, amargor profundo, final de caramelo quemado. Para quien toma café con carácter.</p>
+                <div class="card__meta">
+                  <div class="card__price">$275<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Tueste Oscuro 250g" data-price="275">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">04</span>
+                <img src="https://picsum.photos/seed/french-press-brewer/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Prensa Francesa</h3>
+                <div class="card__origin">Borde doble · 1L</div>
+                <p class="card__desc">Vidrio borosilicatado resistente al choque térmico. Filtro de malla fina de acero inoxidable. Hecha para durar años.</p>
+                <div class="card__meta">
+                  <div class="card__price">$540<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Prensa Francesa" data-price="540">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">05</span>
+                <img src="https://picsum.photos/seed/v60-dripper-ceramic/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">V60 Cerámica</h3>
+                <div class="card__origin">Tamaño 02 · color arena</div>
+                <p class="card__desc">Vertedor de goteo con geometría en espiral interna. Cerámica artesanal cocida a 1200°C. Incluye 50 filtros.</p>
+                <div class="card__meta">
+                  <div class="card__price">$420<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="V60 Cerámica" data-price="420">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">06</span>
+                <img src="https://picsum.photos/seed/ceramic-mug-sand/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Taza de Barro</h3>
+                <div class="card__origin">Barro negro · 280ml</div>
+                <p class="card__desc">Hecha a mano en Oaxaca por el taller de doña Rosa. Cada pieza es única, con la firma del alfarero grabada al fondo.</p>
+                <div class="card__meta">
+                  <div class="card__price">$185<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Taza de Barro" data-price="185">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">07</span>
+                <span class="card__tag">Suscripción</span>
+                <img src="https://picsum.photos/seed/coffee-subscription-box/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Café del Mes</h3>
+                <div class="card__origin">2 bags · envío mensual</div>
+                <p class="card__desc">Dos bolsas de 250g de origen único, cambiando cada mes. Cancela cuando quieras, sin penalizaciones ni trámites.</p>
+                <div class="card__meta">
+                  <div class="card__price">$490<span class="card__price-unit">/mes</span></div>
+                  <button class="card__btn" data-add data-name="Café del Mes" data-price="490">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="carousel__slide">
+            <article class="card">
+              <div class="card__image">
+                <span class="card__number">08</span>
+                <span class="card__tag">Gift</span>
+                <img src="https://picsum.photos/seed/gift-card-ritual/480/600" alt="">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Tarjeta de Regalo</h3>
+                <div class="card__origin">Digital · monto flexible</div>
+                <p class="card__desc">Para el amigo que aún no conoce el café de especialidad. Se envía por correo con una nota personal tuya.</p>
+                <div class="card__meta">
+                  <div class="card__price">Desde $200<span class="card__price-unit">MXN</span></div>
+                  <button class="card__btn" data-add data-name="Tarjeta de Regalo" data-price="200">+</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </div>
+      <div class="carousel__controls">
+        <div class="carousel__dots"></div>
+        <div class="carousel__btn-group">
+          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">←</button>
+          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="compras__cta reveal">
+      <div class="compras__cta-row">
+        <div class="compras__total">
+          <span class="compras__total-label">Total de tu bolsa</span>
+          <span class="compras__total-value" id="cartTotal">$0</span>
+        </div>
+        <a href="#" class="compras__checkout" data-cursor="hover">
+          Finalizar compra →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <h3>Cafetal & co.</h3>
+        <p>Una casa dedicada al grano. Tostamos diario, servimos con calma y respondemos por cada taza que sale de la barra.</p>
+        <span class="eyebrow">CDMX · Monterrey · Guadalajara</span>
+      </div>
+      <div class="footer__col">
+        <h4>Carta</h4>
+        <ul>
+          <li><a href="#frios">Fríos</a></li>
+          <li><a href="#calientes">Calientes</a></li>
+          <li><a href="#compras">Granos</a></li>
+          <li><a href="#compras">Mercancía</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Casas</h4>
+        <ul>
+          <li><a href="#sucursales">Roma Norte</a></li>
+          <li><a href="#sucursales">Condesa</a></li>
+          <li><a href="#sucursales">Polanco</a></li>
+          <li><a href="#sucursales">San Pedro</a></li>
+          <li><a href="#sucursales">Guadalajara</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">hola@cafetal.mx</a></li>
+          <li><a href="#">+52 55 1234 5678</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2024 Cafetal & Co. — Tostado con paciencia.</span>
+      <span>Hecho en México</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================
+   1. CURSOR PERSONALIZADO
+========================================= */
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0, cx = 0, cy = 0;
+
+if (window.matchMedia('(pointer: fine)').matches) {
+  window.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  
+  function loop() {
+    cx += (mx - cx) * 0.18;
+    cy += (my - cy) * 0.18;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.querySelectorAll('[data-cursor="hover"], a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('is-hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('is-hover'));
+  });
+}
+
+/* =========================================
+   2. NAV scroll state
+========================================= */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* =========================================
+   3. REVEAL ON SCROLL (IntersectionObserver)
+========================================= */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-in');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* =========================================
+   4. HOJAS DISPERSAS — entrada + parallax + mouse
+========================================= */
+const leaves = document.querySelectorAll('.leaf');
+
+// Entrada escalonada
+leaves.forEach((leaf, i) => {
+  const rot = parseFloat(leaf.dataset.baseRot || '0');
+  leaf.style.transform = `scale(0.8) rotate(${rot - 5}deg)`;
+  setTimeout(() => {
+    leaf.classList.add('in');
+    leaf.style.transform = `scale(1) rotate(${rot}deg)`;
+  }, 200 + i * 120);
+});
+
+// Parallax con scroll + mouse (solo si no es touch)
+if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+  
+  window.addEventListener('mousemove', (e) => {
+    targetX = (e.clientX - window.innerWidth / 2) * 0.02;
+    targetY = (e.clientY - window.innerHeight / 2) * 0.02;
+  });
+  
+  function parallaxLoop() {
+    currentX += (targetX - currentX) * 0.06;
+    currentY += (targetY - currentY) * 0.06;
+    
+    leaves.forEach((leaf, i) => {
+      const rot = parseFloat(leaf.dataset.baseRot || '0');
+      const depth = 1 - (i * 0.15); // cada hoja se mueve un poco menos
+      leaf.style.transform = `translate(${currentX * depth}px, ${currentY * depth}px) rotate(${rot}deg)`;
+    });
+    
+    requestAnimationFrame(parallaxLoop);
+  }
+  
+  // Esperar a que terminen las entradas
+  setTimeout(parallaxLoop, 1500);
+}
+
+/* =========================================
+   5. CARRUSEL — función reutilizable
+========================================= */
+function initCarousel(carousel) {
+  const viewport = carousel.querySelector('.carousel__viewport');
+  const track = carousel.querySelector('.carousel__track');
+  const slides = Array.from(track.children);
+  const prevBtn = carousel.querySelector('.carousel__btn--prev');
+  const nextBtn = carousel.querySelector('.carousel__btn--next');
+  const dotsContainer = carousel.querySelector('.carousel__dots');
+  
+  let index = 0;
+  let visibleCount = getVisibleCount();
+  let maxIndex = Math.max(0, slides.length - visibleCount);
+  let isDragging = false;
+  let startX = 0;
+  let dragOffset = 0;
+  let trackWidth = 0;
+  let slideWidth = 0;
+  
+  function getVisibleCount() {
+    const w = window.innerWidth;
+    if (w < 700) return 1;
+    if (w < 1100) return 2;
+    return 3;
+  }
+  
+  function buildDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i <= maxIndex; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel__dot';
+      dot.setAttribute('aria-label', `Ir a slide ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(dot);
+    }
+  }
+  
+  function measure() {
+    // El ancho del track completo
+    trackWidth = track.scrollWidth;
+    // Ancho de un slide + gap
+    const styles = window.getComputedStyle(track);
+    const gap = parseFloat(styles.gap) || 0;
+    slideWidth = slides[0].getBoundingClientRect().width + gap;
+  }
+  
+  function update(animate = true) {
+    measure();
+    if (!animate) {
+      track.style.transition = 'none';
+    }
+    
+    const offset = -index * slideWidth;
+    track.style.transform = `translateX(${offset}px)`;
+    
+    if (!animate) {
+      // forzar reflow
+      track.offsetHeight;
+      track.style.transition = '';
+    }
+    
+    // Update dots
+    Array.from(dotsContainer.children).forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === index);
+    });
+    
+    // Update buttons
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === maxIndex;
+    
+    // Update active slides
+    slides.forEach((slide, i) => {
+      const isActive = i >= index && i < index + visibleCount;
+      slide.classList.toggle('is-active', isActive);
+    });
+  }
+  
+  function goTo(i) {
+    index = Math.max(0, Math.min(i, maxIndex));
+    update();
+  }
+  
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+  
+  // Buttons
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  
+  // Keyboard
+  carousel.setAttribute('tabindex', '0');
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+  });
+  
+  // Drag / swipe
+  function onPointerDown(e) {
+    isDragging = true;
+    startX = e.clientX;
+    dragOffset = 0;
+    track.style.transition = 'none';
+    viewport.setPointerCapture(e.pointerId);
+  }
+  
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    dragOffset = e.clientX - startX;
+    const baseOffset = -index * slideWidth;
+    track.style.transform = `translateX(${baseOffset + dragOffset}px)`;
+  }
+  
+  function onPointerUp(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.transition = '';
+    
+    const threshold = slideWidth * 0.2;
+    if (dragOffset < -threshold && index < maxIndex) {
+      index++;
+    } else if (dragOffset > threshold && index > 0) {
+      index--;
+    }
+    update();
+    
+    dragOffset = 0;
+  }
+  
+  viewport.addEventListener('pointerdown', onPointerDown);
+  viewport.addEventListener('pointermove', onPointerMove);
+  viewport.addEventListener('pointerup', onPointerUp);
+  viewport.addEventListener('pointercancel', onPointerUp);
+  
+  // Prevent image drag ghost
+  viewport.querySelectorAll('img').forEach(img => {
+    img.addEventListener('dragstart', e => e.preventDefault());
+  });
+  
+  // Resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const newVisible = getVisibleCount();
+      if (newVisible !== visibleCount) {
+        visibleCount = newVisible;
+        maxIndex = Math.max(0, slides.length - visibleCount);
+        index = Math.min(index, maxIndex);
+        buildDots();
+      }
+      update(false);
+    }, 150);
+  });
+  
+  buildDots();
+  update(false);
+}
+
+document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+
+/* =========================================
+   6. CARRITO simple (visual)
+========================================= */
+let cart = [];
+const cartCountEl = document.getElementById('cartCount');
+const cartTotalEl = document.getElementById('cartTotal');
+
+document.querySelectorAll('[data-add]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const name = btn.dataset.name;
+    const price = parseInt(btn.dataset.price);
+    cart.push({ name, price });
+    
+    // Animación del botón
+    btn.style.transform = 'rotate(90deg) scale(1.2)';
+    setTimeout(() => { btn.style.transform = ''; }, 300);
+    
+    // Actualizar contador
+    cartCountEl.textContent = cart.length;
+    
+    // Actualizar total
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotalEl.textContent = '$' + total.toLocaleString('es-MX');
+    
+    // Pulse en el contador
+    cartCountEl.style.transform = 'scale(1.4)';
+    setTimeout(() => { cartCountEl.style.transform = 'scale(1)'; }, 250);
+  });
+});
+
+// Transición en el contador
+if (cartCountEl) {
+  cartCountEl.style.transition = 'transform 0.3s var(--ease-quiet)';
+}
+
+/* =========================================
+   7. SMOOTH scroll para anchors
+========================================= */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', (e) => {
+    const href = anchor.getAttribute('href');
+    if (href === '#' || href.length < 2) return;
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+/* =========================================
+   8. TEXTOPATH orbital — startOffset animado sutil
+========================================= */
+// (El sello orbital ya rota por CSS; el texto sigue el path estático.)
+// Para más vida, animamos ligeramente el startOffset:
+const textPath = document.querySelector('textPath');
+if (textPath && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  let offset = 0;
+  function animateOrbit() {
+    offset = (offset + 0.08) % 100;
+    textPath.setAttribute('startOffset', offset + '%');
+    requestAnimationFrame(animateOrbit);
+  }
+  // animateOrbit(); // desactivado: la rotación del SVG entero ya da movimiento.
+}
+</script>
+</body>
+</html>
